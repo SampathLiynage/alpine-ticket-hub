@@ -8,6 +8,7 @@ import { Calendar, MapPin, Users, ArrowLeft, CheckCircle2, Bell } from "lucide-r
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import StadiumLayout from "@/components/StadiumLayout";
 
 const gameData = {
   1: {
@@ -141,6 +142,7 @@ const GameDetail = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [isBooking, setIsBooking] = useState(false);
+  const [bookedSeats, setBookedSeats] = useState<number[]>([]);
 
   const game = gameData[Number(gameId)];
 
@@ -168,8 +170,12 @@ const GameDetail = () => {
     // Simulate booking process
     await new Promise(resolve => setTimeout(resolve, 2000));
     
+    // Add the ticket to booked seats
+    setBookedSeats(prev => [...prev, selectedTicket.id]);
+    
     setIsBooking(false);
     setShowConfirmation(true);
+    setSelectedTicket(null);
     
     toast({
       title: "Ticket Booked Successfully!",
@@ -183,6 +189,10 @@ const GameDetail = () => {
       title: "Notification Set!",
       description: `You'll be notified when tickets become available for ${game.homeTeam} vs ${game.awayTeam}.`,
     });
+  };
+
+  const handleSeatSelect = (ticket) => {
+    setSelectedTicket(ticket);
   };
 
   return (
@@ -264,36 +274,24 @@ const GameDetail = () => {
         </section>
       ) : (
         <>
-          {/* Stadium Map Placeholder */}
+          {/* Stadium Layout */}
           <section className="py-8 px-4 bg-white border-b">
-            <div className="max-w-6xl mx-auto text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Stadium Layout</h2>
-              <div className="bg-gradient-to-b from-green-100 to-green-200 rounded-lg p-8 max-w-2xl mx-auto">
-                <div className="bg-white rounded p-4 mb-4">
-                  <div className="text-sm text-gray-600 mb-2">PITCH</div>
-                  <div className="h-32 bg-green-500 rounded flex items-center justify-center">
-                    <span className="text-white font-semibold">Playing Field</span>
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-2 text-xs">
-                  <div className="bg-blue-200 p-2 rounded">Tribune A</div>
-                  <div className="bg-yellow-200 p-2 rounded">Stehplatz</div>
-                  <div className="bg-red-200 p-2 rounded">Tribune B</div>
-                  <div className="bg-purple-200 p-2 rounded">Tribune C</div>
-                  <div className="bg-orange-200 p-2 rounded">VIP</div>
-                  <div className="bg-gray-200 p-2 rounded">Tribune D</div>
-                </div>
-              </div>
-            </div>
+            <StadiumLayout 
+              tickets={game.tickets}
+              onSeatSelect={handleSeatSelect}
+              bookedSeats={bookedSeats}
+            />
           </section>
 
-          {/* Available Tickets */}
+          {/* Available Tickets List */}
           <section className="py-12 px-4">
             <div className="max-w-6xl mx-auto">
               <h2 className="text-3xl font-bold text-gray-900 mb-8">Available Tickets</h2>
               
               <div className="grid gap-4">
-                {game.tickets.map((ticket) => (
+                {game.tickets
+                  .filter(ticket => !bookedSeats.includes(ticket.id))
+                  .map((ticket) => (
                   <Card key={ticket.id} className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-600">
                     <CardContent className="p-6">
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -339,6 +337,14 @@ const GameDetail = () => {
                   </Card>
                 ))}
               </div>
+              
+              {bookedSeats.length > 0 && (
+                <div className="mt-6 p-4 bg-green-50 rounded-lg">
+                  <p className="text-sm text-green-700">
+                    {bookedSeats.length} seat(s) have been booked and are no longer available.
+                  </p>
+                </div>
+              )}
             </div>
           </section>
         </>
