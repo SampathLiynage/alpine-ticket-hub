@@ -1,18 +1,12 @@
-# Welcome to your Lovable project
+# Welcome to your project
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/5b843c53-c98f-408d-b997-2fd23e2adf29
+**URL**: https://alpine-ticket-m1c06wg2k-sampathliyanage27-7457s-projects.vercel.app/
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/5b843c53-c98f-408d-b997-2fd23e2adf29) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
 
 **Use your preferred IDE**
 
