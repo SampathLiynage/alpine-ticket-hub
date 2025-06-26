@@ -9,7 +9,6 @@ import { Calendar, MapPin, Users, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import StadiumLayout from "@/components/StadiumLayout";
 
 const gameData = {
   1: {
@@ -24,71 +23,11 @@ const gameData = {
     priceRange: "CHF 45-85",
     description: "Classic Swiss derby between two powerhouse teams",
     tickets: [
-      { id: 1, section: "Tribune A", row: "12", seat: "15", price: 85, seller: "Club Member #2847", seatId: "A12-15" },
-      { id: 2, section: "Tribune B", row: "8", seat: "22", price: 65, seller: "Club Member #1923", seatId: "B8-22" },
-      { id: 3, section: "Stehplatz", row: "-", seat: "General", price: 45, seller: "Club Member #3456", seatId: "ST-001" },
-      { id: 4, section: "Tribune A", row: "15", seat: "8", price: 85, seller: "Club Member #7821", seatId: "A15-8" },
-      { id: 5, section: "Tribune C", row: "5", seat: "12", price: 75, seller: "Club Member #4567", seatId: "C5-12" },
-    ]
-  },
-  3: {
-    id: 3,
-    homeTeam: "FC Lugano",
-    awayTeam: "Grasshopper Club",
-    date: "2025-01-22",
-    time: "16:00",
-    stadium: "Cornaredo Stadium",
-    hasTickets: true,
-    ticketCount: 8,
-    priceRange: "CHF 35-65",
-    description: "Exciting match between two competitive teams",
-    tickets: [
-      { id: 1, section: "VIP", row: "1", seat: "5", price: 65, seller: "Club Member #1234", seatId: "VIP1-5" },
-      { id: 2, section: "Tribune A", row: "10", seat: "12", price: 55, seller: "Club Member #5678", seatId: "A10-12" },
-      { id: 3, section: "Tribune B", row: "7", seat: "18", price: 45, seller: "Club Member #9012", seatId: "B7-18" },
-      { id: 4, section: "Tribune C", row: "12", seat: "6", price: 40, seller: "Club Member #3456", seatId: "C12-6" },
-      { id: 5, section: "Stehplatz", row: "-", seat: "General", price: 35, seller: "Club Member #7890", seatId: "ST-002" },
-    ]
-  },
-  4: {
-    id: 4,
-    homeTeam: "FC Sion",
-    awayTeam: "Servette FC",
-    date: "2025-01-25",
-    time: "19:30",
-    stadium: "Stade Tourbillon",
-    hasTickets: true,
-    ticketCount: 5,
-    priceRange: "CHF 40-75",
-    description: "Mountain derby with passionate fans",
-    tickets: [
-      { id: 1, section: "VIP", row: "2", seat: "8", price: 75, seller: "Club Member #2468", seatId: "VIP2-8" },
-      { id: 2, section: "Tribune A", row: "6", seat: "14", price: 60, seller: "Club Member #1357", seatId: "A6-14" },
-      { id: 3, section: "Tribune B", row: "11", seat: "20", price: 50, seller: "Club Member #9753", seatId: "B11-20" },
-      { id: 4, section: "Tribune C", row: "8", seat: "9", price: 45, seller: "Club Member #8642", seatId: "C8-9" },
-      { id: 5, section: "Stehplatz", row: "-", seat: "General", price: 40, seller: "Club Member #5319", seatId: "ST-003" },
-    ]
-  },
-  6: {
-    id: 6,
-    homeTeam: "FC Winterthur",
-    awayTeam: "FC Schaffhausen",
-    date: "2025-02-01",
-    time: "17:00",
-    stadium: "Schützenwiese",
-    hasTickets: true,
-    ticketCount: 15,
-    priceRange: "CHF 25-45",
-    description: "Local rivalry with great atmosphere",
-    tickets: [
-      { id: 1, section: "VIP", row: "1", seat: "10", price: 45, seller: "Club Member #1111", seatId: "VIP1-10" },
-      { id: 2, section: "Tribune A", row: "5", seat: "7", price: 35, seller: "Club Member #2222", seatId: "A5-7" },
-      { id: 3, section: "Tribune A", row: "8", seat: "15", price: 35, seller: "Club Member #3333", seatId: "A8-15" },
-      { id: 4, section: "Tribune B", row: "4", seat: "11", price: 30, seller: "Club Member #4444", seatId: "B4-11" },
-      { id: 5, section: "Tribune B", row: "9", seat: "3", price: 30, seller: "Club Member #5555", seatId: "B9-3" },
-      { id: 6, section: "Tribune C", row: "6", seat: "13", price: 28, seller: "Club Member #6666", seatId: "C6-13" },
-      { id: 7, section: "Tribune C", row: "10", seat: "8", price: 28, seller: "Club Member #7777", seatId: "C10-8" },
-      { id: 8, section: "Stehplatz", row: "-", seat: "General", price: 25, seller: "Club Member #8888", seatId: "ST-004" },
+      { id: 1, section: "Tribune A", row: "12", seat: "15", price: 85, seller: "Club Member #2847" },
+      { id: 2, section: "Tribune B", row: "8", seat: "22", price: 65, seller: "Club Member #1923" },
+      { id: 3, section: "Stehplatz", row: "-", seat: "General", price: 45, seller: "Club Member #3456" },
+      { id: 4, section: "Tribune A", row: "15", seat: "8", price: 85, seller: "Club Member #7821" },
+      { id: 5, section: "Tribune C", row: "5", seat: "12", price: 75, seller: "Club Member #4567" },
     ]
   }
 };
@@ -97,7 +36,6 @@ const GameDetail = () => {
   const { gameId } = useParams();
   const navigate = useNavigate();
   const [selectedTicket, setSelectedTicket] = useState(null);
-  const [selectedSeat, setSelectedSeat] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isBooking, setIsBooking] = useState(false);
 
@@ -118,14 +56,6 @@ const GameDetail = () => {
       </div>
     );
   }
-
-  const handleSeatSelect = (seatId) => {
-    setSelectedSeat(seatId);
-    const ticket = game.tickets.find(t => t.seatId === seatId);
-    if (ticket) {
-      setSelectedTicket(ticket);
-    }
-  };
 
   const handleBuyTicket = async () => {
     if (!selectedTicket) return;
@@ -198,15 +128,26 @@ const GameDetail = () => {
         </div>
       </section>
 
-      {/* Stadium Layout */}
+      {/* Stadium Map Placeholder */}
       <section className="py-8 px-4 bg-white border-b">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Stadium Layout - Select Your Seat</h2>
-          <StadiumLayout
-            availableTickets={game.tickets}
-            selectedSeat={selectedSeat}
-            onSeatSelect={handleSeatSelect}
-          />
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Stadium Layout</h2>
+          <div className="bg-gradient-to-b from-green-100 to-green-200 rounded-lg p-8 max-w-2xl mx-auto">
+            <div className="bg-white rounded p-4 mb-4">
+              <div className="text-sm text-gray-600 mb-2">PITCH</div>
+              <div className="h-32 bg-green-500 rounded flex items-center justify-center">
+                <span className="text-white font-semibold">Playing Field</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="bg-blue-200 p-2 rounded">Tribune A</div>
+              <div className="bg-yellow-200 p-2 rounded">Stehplatz</div>
+              <div className="bg-red-200 p-2 rounded">Tribune B</div>
+              <div className="bg-purple-200 p-2 rounded">Tribune C</div>
+              <div className="bg-orange-200 p-2 rounded">VIP</div>
+              <div className="bg-gray-200 p-2 rounded">Tribune D</div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -217,26 +158,12 @@ const GameDetail = () => {
           
           <div className="grid gap-4">
             {game.tickets.map((ticket) => (
-              <Card 
-                key={ticket.id} 
-                className={`hover:shadow-lg transition-shadow border-l-4 cursor-pointer ${
-                  selectedTicket?.id === ticket.id ? 'border-l-green-600 bg-green-50' : 'border-l-blue-600'
-                }`}
-                onClick={() => {
-                  setSelectedTicket(ticket);
-                  setSelectedSeat(ticket.seatId);
-                }}
-              >
+              <Card key={ticket.id} className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-600">
                 <CardContent className="p-6">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-4 mb-2">
-                        <Badge 
-                          variant="outline" 
-                          className={`text-blue-700 border-blue-200 ${
-                            ticket.section === 'VIP' ? 'bg-purple-100 border-purple-200 text-purple-700' : ''
-                          }`}
-                        >
+                        <Badge variant="outline" className="text-blue-700 border-blue-200">
                           {ticket.section}
                         </Badge>
                         {ticket.row !== "-" && (
@@ -265,18 +192,10 @@ const GameDetail = () => {
                         </div>
                       </div>
                       <Button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedTicket(ticket);
-                          setSelectedSeat(ticket.seatId);
-                        }}
-                        className={`px-6 ${
-                          selectedTicket?.id === ticket.id 
-                            ? 'bg-green-600 hover:bg-green-700' 
-                            : 'bg-blue-600 hover:bg-blue-700'
-                        } text-white`}
+                        onClick={() => setSelectedTicket(ticket)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-6"
                       >
-                        {selectedTicket?.id === ticket.id ? 'Selected' : 'Select Seat'}
+                        Select Seat
                       </Button>
                     </div>
                   </div>
@@ -284,22 +203,11 @@ const GameDetail = () => {
               </Card>
             ))}
           </div>
-
-          {selectedTicket && (
-            <div className="mt-8 text-center">
-              <Button
-                onClick={() => setSelectedTicket(selectedTicket)}
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
-              >
-                Buy Selected Ticket - CHF {selectedTicket.price}
-              </Button>
-            </div>
-          )}
         </div>
       </section>
 
       {/* Purchase Dialog */}
-      <Dialog open={!!selectedTicket && !showConfirmation} onOpenChange={() => setSelectedTicket(null)}>
+      <Dialog open={!!selectedTicket} onOpenChange={() => setSelectedTicket(null)}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Confirm Purchase</DialogTitle>
