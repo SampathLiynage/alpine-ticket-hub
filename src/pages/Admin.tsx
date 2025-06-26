@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,8 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Shield, Lock, Users, Calendar, DollarSign, CheckCircle, XCircle, Clock, Eye, Edit, Trash2 } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Shield, Lock, Users, Calendar, DollarSign, CheckCircle, XCircle, Clock, Eye, Edit, Trash2, Plus, UserCheck, UserX } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
 
 const mockListings = [
   {
@@ -43,10 +45,47 @@ const mockListings = [
   }
 ];
 
-const mockGames = [
-  { id: 1, homeTeam: "FC Zurich", awayTeam: "FC Basel", date: "2025-01-15", time: "18:30", stadium: "Letzigrund" },
-  { id: 2, homeTeam: "FC Zurich", awayTeam: "Young Boys", date: "2025-01-25", time: "20:00", stadium: "Letzigrund" },
-  { id: 3, homeTeam: "FC Zurich", awayTeam: "FC St. Gallen", date: "2025-02-05", time: "18:30", stadium: "Letzigrund" }
+const mockUsers = [
+  {
+    id: 1,
+    name: "Hans Müller",
+    email: "hans.mueller@email.ch",
+    membershipId: "2847",
+    status: "verified",
+    joinDate: "2023-08-15",
+    ticketsSold: 12,
+    ticketsBought: 8
+  },
+  {
+    id: 2,
+    name: "Maria Schmidt",
+    email: "maria.schmidt@email.ch",
+    membershipId: "1923",
+    status: "verified",
+    joinDate: "2024-01-20",
+    ticketsSold: 7,
+    ticketsBought: 15
+  },
+  {
+    id: 3,
+    name: "Thomas Weber",
+    email: "thomas.weber@email.ch",
+    membershipId: "3456",
+    status: "pending",
+    joinDate: "2024-12-10",
+    ticketsSold: 2,
+    ticketsBought: 3
+  },
+  {
+    id: 4,
+    name: "Anna Zimmermann",
+    email: "anna.zimmermann@email.ch",
+    membershipId: "4789",
+    status: "suspended",
+    joinDate: "2023-05-12",
+    ticketsSold: 25,
+    ticketsBought: 5
+  }
 ];
 
 const Admin = () => {
@@ -57,6 +96,33 @@ const Admin = () => {
   const [listings, setListings] = useState(mockListings);
   const [selectedListing, setSelectedListing] = useState(null);
   const [showListingDetails, setShowListingDetails] = useState(false);
+
+  // Game Management State
+  const [games, setGames] = useState([
+    { id: 1, homeTeam: "FC Zurich", awayTeam: "FC Basel", date: "2025-01-15", time: "18:30", stadium: "Letzigrund" },
+    { id: 2, homeTeam: "FC Zurich", awayTeam: "Young Boys", date: "2025-01-25", time: "20:00", stadium: "Letzigrund" },
+    { id: 3, homeTeam: "FC Zurich", awayTeam: "FC St. Gallen", date: "2025-02-05", time: "18:30", stadium: "Letzigrund" }
+  ]);
+  const [showGameDialog, setShowGameDialog] = useState(false);
+  const [editingGame, setEditingGame] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [gameToDelete, setGameToDelete] = useState(null);
+
+  // User Management State
+  const [users, setUsers] = useState(mockUsers);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showUserDetails, setShowUserDetails] = useState(false);
+
+  // Game Form
+  const gameForm = useForm({
+    defaultValues: {
+      homeTeam: "",
+      awayTeam: "",
+      date: "",
+      time: "",
+      stadium: ""
+    }
+  });
 
   const handleAdminLogin = async () => {
     setIsLoading(true);
@@ -110,6 +176,8 @@ const Admin = () => {
       case "approved": return "bg-green-100 text-green-800 border-green-200";
       case "rejected": return "bg-red-100 text-red-800 border-red-200";
       case "sold": return "bg-blue-100 text-blue-800 border-blue-200";
+      case "verified": return "bg-green-100 text-green-800 border-green-200";
+      case "suspended": return "bg-red-100 text-red-800 border-red-200";
       default: return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
@@ -120,8 +188,78 @@ const Admin = () => {
       case "approved": return <CheckCircle className="w-3 h-3" />;
       case "rejected": return <XCircle className="w-3 h-3" />;
       case "sold": return <DollarSign className="w-3 h-3" />;
+      case "verified": return <UserCheck className="w-3 h-3" />;
+      case "suspended": return <UserX className="w-3 h-3" />;
       default: return null;
     }
+  };
+
+  // Game Management Functions
+  const handleAddGame = () => {
+    setEditingGame(null);
+    gameForm.reset();
+    setShowGameDialog(true);
+  };
+
+  const handleEditGame = (game) => {
+    setEditingGame(game);
+    gameForm.reset(game);
+    setShowGameDialog(true);
+  };
+
+  const handleDeleteGame = (game) => {
+    setGameToDelete(game);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDeleteGame = () => {
+    setGames(prev => prev.filter(game => game.id !== gameToDelete.id));
+    toast({
+      title: "Game Deleted",
+      description: "The game has been removed from the schedule.",
+    });
+    setShowDeleteConfirm(false);
+    setGameToDelete(null);
+  };
+
+  const onGameSubmit = (data) => {
+    if (editingGame) {
+      setGames(prev => prev.map(game => 
+        game.id === editingGame.id ? { ...game, ...data } : game
+      ));
+      toast({
+        title: "Game Updated",
+        description: "The game details have been updated successfully.",
+      });
+    } else {
+      const newGame = {
+        id: Math.max(...games.map(g => g.id)) + 1,
+        ...data
+      };
+      setGames(prev => [...prev, newGame]);
+      toast({
+        title: "Game Added",
+        description: "New game has been added to the schedule.",
+      });
+    }
+    setShowGameDialog(false);
+  };
+
+  // User Management Functions
+  const handleUserStatusChange = async (userId, newStatus) => {
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    setUsers(prev => prev.map(user => 
+      user.id === userId ? { ...user, status: newStatus } : user
+    ));
+    
+    toast({
+      title: "User Status Updated",
+      description: `User status has been changed to ${newStatus}.`,
+    });
+    
+    setIsLoading(false);
   };
 
   if (!isLoggedIn) {
@@ -379,7 +517,7 @@ const Admin = () => {
             </Card>
           </TabsContent>
 
-          {/* Games Tab */}
+          {/* Games Tab - Enhanced */}
           <TabsContent value="games">
             <Card>
               <CardHeader>
@@ -393,7 +531,7 @@ const Admin = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {mockGames.map((game) => (
+                  {games.map((game) => (
                     <Card key={game.id} className="hover:shadow-md transition-shadow">
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
@@ -408,11 +546,20 @@ const Admin = () => {
                           </div>
                           
                           <div className="flex items-center gap-2">
-                            <Button size="sm" variant="outline">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleEditGame(game)}
+                            >
                               <Edit className="w-4 h-4 mr-1" />
                               Edit
                             </Button>
-                            <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="text-red-600 border-red-200 hover:bg-red-50"
+                              onClick={() => handleDeleteGame(game)}
+                            >
                               <Trash2 className="w-4 h-4 mr-1" />
                               Delete
                             </Button>
@@ -424,7 +571,11 @@ const Admin = () => {
                 </div>
                 
                 <div className="mt-6">
-                  <Button className="bg-blue-600 hover:bg-blue-700">
+                  <Button 
+                    onClick={handleAddGame}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
                     Add New Game
                   </Button>
                 </div>
@@ -432,7 +583,7 @@ const Admin = () => {
             </Card>
           </TabsContent>
 
-          {/* Users Tab */}
+          {/* Users Tab - Enhanced */}
           <TabsContent value="users">
             <Card>
               <CardHeader>
@@ -445,22 +596,275 @@ const Admin = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8">
-                  <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">User Management</h3>
-                  <p className="text-gray-600 max-w-md mx-auto">
-                    Advanced user management features including season ticket verification, 
-                    account status management, and permission controls.
-                  </p>
-                  <Button className="mt-4 bg-blue-600 hover:bg-blue-700">
-                    Access User Database
-                  </Button>
-                </div>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>User</TableHead>
+                      <TableHead>Membership ID</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Join Date</TableHead>
+                      <TableHead>Activity</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">{user.name}</div>
+                            <div className="text-sm text-gray-500">{user.email}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>#{user.membershipId}</TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(user.status)}>
+                            {getStatusIcon(user.status)}
+                            <span className="ml-1 capitalize">{user.status}</span>
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{new Date(user.joinDate).toLocaleDateString('de-CH')}</TableCell>
+                        <TableCell>
+                          <div className="text-sm">
+                            <div>Sold: {user.ticketsSold}</div>
+                            <div>Bought: {user.ticketsBought}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setShowUserDetails(true);
+                              }}
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                            {user.status === "pending" && (
+                              <Button
+                                size="sm"
+                                onClick={() => handleUserStatusChange(user.id, "verified")}
+                                className="bg-green-600 hover:bg-green-700"
+                                disabled={isLoading}
+                              >
+                                Verify
+                              </Button>
+                            )}
+                            {user.status === "verified" && (
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => handleUserStatusChange(user.id, "suspended")}
+                                disabled={isLoading}
+                              >
+                                Suspend
+                              </Button>
+                            )}
+                            {user.status === "suspended" && (
+                              <Button
+                                size="sm"
+                                onClick={() => handleUserStatusChange(user.id, "verified")}
+                                className="bg-blue-600 hover:bg-blue-700"
+                                disabled={isLoading}
+                              >
+                                Reactivate
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Game Dialog */}
+      <Dialog open={showGameDialog} onOpenChange={setShowGameDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{editingGame ? "Edit Game" : "Add New Game"}</DialogTitle>
+            <DialogDescription>
+              {editingGame ? "Update the game details" : "Add a new game to the schedule"}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <Form {...gameForm}>
+            <form onSubmit={gameForm.handleSubmit(onGameSubmit)} className="space-y-4">
+              <FormField
+                control={gameForm.control}
+                name="homeTeam"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Home Team</FormLabel>
+                    <FormControl>
+                      <Input placeholder="FC Zurich" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={gameForm.control}
+                name="awayTeam"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Away Team</FormLabel>
+                    <FormControl>
+                      <Input placeholder="FC Basel" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={gameForm.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Date</FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={gameForm.control}
+                  name="time"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Time</FormLabel>
+                      <FormControl>
+                        <Input type="time" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <FormField
+                control={gameForm.control}
+                name="stadium"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Stadium</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Letzigrund" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setShowGameDialog(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+                  {editingGame ? "Update Game" : "Add Game"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Game Confirmation */}
+      <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Game</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this game? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {gameToDelete && (
+            <div className="py-4">
+              <p className="font-medium">{gameToDelete.homeTeam} vs {gameToDelete.awayTeam}</p>
+              <p className="text-sm text-gray-600">
+                {new Date(gameToDelete.date).toLocaleDateString('de-CH')} at {gameToDelete.time}
+              </p>
+            </div>
+          )}
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDeleteGame}>
+              Delete Game
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* User Details Dialog */}
+      <Dialog open={showUserDetails} onOpenChange={setShowUserDetails}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>User Details</DialogTitle>
+            <DialogDescription>
+              Detailed information about the user account
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedUser && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Name</Label>
+                  <p className="text-base font-semibold">{selectedUser.name}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Email</Label>
+                  <p className="text-base">{selectedUser.email}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Membership ID</Label>
+                  <p className="text-base">#{selectedUser.membershipId}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Status</Label>
+                  <Badge className={getStatusColor(selectedUser.status)}>
+                    {getStatusIcon(selectedUser.status)}
+                    <span className="ml-1 capitalize">{selectedUser.status}</span>
+                  </Badge>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Join Date</Label>
+                  <p className="text-base">{new Date(selectedUser.joinDate).toLocaleDateString('de-CH')}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-500">Activity</Label>
+                  <div className="text-base">
+                    <div>Tickets Sold: {selectedUser.ticketsSold}</div>
+                    <div>Tickets Bought: {selectedUser.ticketsBought}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowUserDetails(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Listing Details Dialog */}
       <Dialog open={showListingDetails} onOpenChange={setShowListingDetails}>
