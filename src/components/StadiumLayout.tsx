@@ -49,10 +49,11 @@ const StadiumLayout = ({ tickets, onSeatSelect, bookedSeats }: StadiumLayoutProp
     return sectionColors[section] || 'bg-gray-100 border-gray-300';
   };
 
-  // Get sections for top and bottom
+  // Get all sections and divide them properly
   const sectionNames = Object.keys(ticketsBySection);
-  const topSections = sectionNames.slice(0, 3);
-  const bottomSections = sectionNames.slice(3, 6);
+  const halfPoint = Math.ceil(sectionNames.length / 2);
+  const topSections = sectionNames.slice(0, halfPoint);
+  const bottomSections = sectionNames.slice(halfPoint);
 
   const renderSection = (sectionName: string) => {
     const sectionTickets = ticketsBySection[sectionName] || [];
@@ -128,7 +129,7 @@ const StadiumLayout = ({ tickets, onSeatSelect, bookedSeats }: StadiumLayoutProp
       
       <div className="bg-gradient-to-b from-green-50 to-green-100 rounded-lg p-6">
         {/* Top Sections */}
-        <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="grid gap-4 mb-4" style={{ gridTemplateColumns: `repeat(${topSections.length}, 1fr)` }}>
           {topSections.map(sectionName => renderSection(sectionName))}
         </div>
 
@@ -144,7 +145,7 @@ const StadiumLayout = ({ tickets, onSeatSelect, bookedSeats }: StadiumLayoutProp
         </div>
 
         {/* Bottom Sections */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${bottomSections.length}, 1fr)` }}>
           {bottomSections.map(sectionName => renderSection(sectionName))}
         </div>
 

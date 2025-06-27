@@ -162,6 +162,15 @@ const GameDetail = () => {
     );
   }
 
+  // Pre-booked seats (simulate some already booked seats)
+  const preBookedSeats = [2, 5, 8, 15, 22, 28, 35];
+  const allBookedSeats = [...bookedSeats, ...preBookedSeats];
+
+  // Filter out standing tickets and booked seats for the available tickets list
+  const availableTickets = game.tickets
+    .filter(ticket => ticket.row !== "-") // Remove standing tickets
+    .filter(ticket => !allBookedSeats.includes(ticket.id)); // Remove booked seats
+
   const handleBuyTicket = async () => {
     if (!selectedTicket) return;
     
@@ -234,7 +243,7 @@ const GameDetail = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5" />
-                  <span className="text-lg">{game.ticketCount} tickets available</span>
+                  <span className="text-lg">{availableTickets.length} tickets available</span>
                 </div>
               </div>
             </div>
@@ -249,7 +258,7 @@ const GameDetail = () => {
         </div>
       </section>
 
-      {!game.hasTickets ? (
+      {availableTickets.length === 0 ? (
         // No Tickets Available Section
         <section className="py-20 px-4">
           <div className="max-w-4xl mx-auto text-center">
@@ -289,9 +298,7 @@ const GameDetail = () => {
               <h2 className="text-3xl font-bold text-gray-900 mb-8">Available Tickets</h2>
               
               <div className="grid gap-4">
-                {game.tickets
-                  .filter(ticket => !bookedSeats.includes(ticket.id))
-                  .map((ticket) => (
+                {availableTickets.map((ticket) => (
                   <Card key={ticket.id} className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-600">
                     <CardContent className="p-6">
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -300,16 +307,9 @@ const GameDetail = () => {
                             <Badge variant="outline" className="text-blue-700 border-blue-200">
                               {ticket.section}
                             </Badge>
-                            {ticket.row !== "-" && (
-                              <span className="text-sm text-gray-600">
-                                Row {ticket.row}, Seat {ticket.seat}
-                              </span>
-                            )}
-                            {ticket.row === "-" && (
-                              <span className="text-sm text-gray-600">
-                                {ticket.seat} Admission
-                              </span>
-                            )}
+                            <span className="text-sm text-gray-600">
+                              Row {ticket.row}, Seat {ticket.seat}
+                            </span>
                           </div>
                           <p className="text-sm text-gray-500">
                             Sold by: {ticket.seller}
@@ -338,10 +338,10 @@ const GameDetail = () => {
                 ))}
               </div>
               
-              {bookedSeats.length > 0 && (
+              {allBookedSeats.length > 0 && (
                 <div className="mt-6 p-4 bg-green-50 rounded-lg">
                   <p className="text-sm text-green-700">
-                    {bookedSeats.length} seat(s) have been booked and are no longer available.
+                    {allBookedSeats.length} seat(s) have been booked and are no longer available.
                   </p>
                 </div>
               )}
