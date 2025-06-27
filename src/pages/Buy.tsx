@@ -1,12 +1,12 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar, MapPin, Users, Search, Filter, CheckCircle, XCircle } from "lucide-react";
+import { Calendar, MapPin, Users, Search, Filter, CheckCircle, XCircle, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -82,6 +82,7 @@ const allGames = [
 const Buy = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const { toast } = useToast();
 
   const filteredGames = allGames.filter(game => {
     const matchesSearch = game.homeTeam.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -94,6 +95,13 @@ const Buy = () => {
     
     return matchesSearch && matchesFilter;
   });
+
+  const handleNotifyRequest = (gameTitle: string) => {
+    toast({
+      title: "Notification Set!",
+      description: `We'll notify you when tickets become available for ${gameTitle}`,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
@@ -205,8 +213,13 @@ const Buy = () => {
                       </div>
                     ) : (
                       <div className="text-center py-4">
-                        <p className="text-gray-500 text-sm mb-2">No tickets available yet</p>
-                        <Button variant="outline" disabled className="w-full">
+                        <p className="text-gray-500 text-sm mb-3">No tickets available yet</p>
+                        <Button 
+                          variant="outline" 
+                          className="w-full hover:bg-blue-50 hover:border-blue-300"
+                          onClick={() => handleNotifyRequest(`${game.homeTeam} vs ${game.awayTeam}`)}
+                        >
+                          <Bell className="w-4 h-4 mr-2" />
                           Notify When Available
                         </Button>
                       </div>
