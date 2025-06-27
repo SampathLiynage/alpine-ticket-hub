@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, Users, Shield, CheckCircle, XCircle } from "lucide-react";
+import { Calendar, MapPin, Users, Shield, CheckCircle, XCircle, Ticket, Trophy, UserCheck, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -50,6 +50,33 @@ const upcomingGames = [
   }
 ];
 
+const platformStats = [
+  {
+    icon: Ticket,
+    label: "Available Tickets",
+    value: "247",
+    description: "Ready to purchase"
+  },
+  {
+    icon: Trophy,
+    label: "Upcoming Games",
+    value: "18",
+    description: "This month"
+  },
+  {
+    icon: UserCheck,
+    label: "Verified Sellers",
+    value: "1,432",
+    description: "Trusted members"
+  },
+  {
+    icon: CheckCircle,
+    label: "Successful Sales",
+    value: "8,956",
+    description: "All time"
+  }
+];
+
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
@@ -88,6 +115,37 @@ const Index = () => {
                 Sell a Ticket
               </Button>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Platform Statistics */}
+      <section className="py-12 px-4 bg-white border-b">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Platform at a Glance</h2>
+            <p className="text-gray-600">Real-time statistics from Switzerland's trusted ticket marketplace</p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {platformStats.map((stat, index) => (
+              <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300 border-blue-100">
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <stat.icon className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div className="text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm font-medium text-gray-900 mb-1">
+                    {stat.label}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {stat.description}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
