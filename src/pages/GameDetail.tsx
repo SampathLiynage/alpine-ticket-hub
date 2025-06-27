@@ -290,7 +290,7 @@ const GameDetail = () => {
               
               <div className="grid gap-4">
                 {game.tickets
-                  .filter(ticket => !bookedSeats.includes(ticket.id))
+                  .filter(ticket => ticket.row !== "-" && !bookedSeats.includes(ticket.id))
                   .map((ticket) => (
                   <Card key={ticket.id} className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-600">
                     <CardContent className="p-6">
@@ -300,16 +300,9 @@ const GameDetail = () => {
                             <Badge variant="outline" className="text-blue-700 border-blue-200">
                               {ticket.section}
                             </Badge>
-                            {ticket.row !== "-" && (
-                              <span className="text-sm text-gray-600">
-                                Row {ticket.row}, Seat {ticket.seat}
-                              </span>
-                            )}
-                            {ticket.row === "-" && (
-                              <span className="text-sm text-gray-600">
-                                {ticket.seat} Admission
-                              </span>
-                            )}
+                            <span className="text-sm text-gray-600">
+                              Row {ticket.row}, Seat {ticket.seat}
+                            </span>
                           </div>
                           <p className="text-sm text-gray-500">
                             Sold by: {ticket.seller}
