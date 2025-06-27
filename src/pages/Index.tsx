@@ -83,8 +83,8 @@ const Index = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative py-20 px-4 text-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
+      <section className="relative py-20 px-4 text-center bg-[url('/hero-bg.jpg')] bg-cover bg-center h-full w-full text-white overflow-hidden">
+        <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
         <div className="relative max-w-6xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
             <Shield className="w-4 h-4" />
@@ -97,14 +97,14 @@ const Index = () => {
             <span className="text-3xl lg:text-5xl font-light">Easily & Securely</span>
           </h1>
           
-          <p className="text-xl lg:text-2xl mb-12 text-blue-100 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl lg:text-xl mb-12 text-gray-100 max-w-3xl mx-auto leading-relaxed">
             Switzerland's premier platform for season ticket holders to resell tickets they can't use. 
             Safe, simple, and connected to your club membership.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Link to="/buy">
-              <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50 text-lg px-8 py-4 h-auto font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+              <Button size="lg" className="bg-blue-700 text-white hover:bg-blue-700 text-lg px-8 py-4 h-auto font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
                 <Users className="w-5 h-5 mr-2" />
                 Buy a Ticket
               </Button>
@@ -122,10 +122,6 @@ const Index = () => {
       {/* Platform Statistics */}
       <section className="py-12 px-4 bg-white border-b">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Platform at a Glance</h2>
-            <p className="text-gray-600">Real-time statistics from Switzerland's trusted ticket marketplace</p>
-          </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {platformStats.map((stat, index) => (
@@ -150,61 +146,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Why Choose Seatwell?</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              The trusted platform connecting Swiss sports fans with secure ticket resale
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center p-8 hover:shadow-lg transition-shadow duration-300 border-blue-100">
-              <CardHeader>
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Shield className="w-8 h-8 text-blue-600" />
-                </div>
-                <CardTitle className="text-xl text-gray-900">Secure & Verified</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Only verified season ticket holders can sell. All transactions are protected and guaranteed.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center p-8 hover:shadow-lg transition-shadow duration-300 border-blue-100">
-              <CardHeader>
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-8 h-8 text-blue-600" />
-                </div>
-                <CardTitle className="text-xl text-gray-900">Club Connected</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Integrated with official club systems. Your membership is verified automatically.
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center p-8 hover:shadow-lg transition-shadow duration-300 border-blue-100">
-              <CardHeader>
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Calendar className="w-8 h-8 text-blue-600" />
-                </div>
-                <CardTitle className="text-xl text-gray-900">Easy Management</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  List tickets in seconds. Get paid instantly when they sell. No hassle, no waiting.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+     
 
       {/* Games on the Horizon */}
       <section className="py-16 px-4 bg-gray-50">
@@ -269,6 +211,70 @@ const Index = () => {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+        <div className="mt-10 text-center">
+          <Link to="/buy">
+              <Button size="lg" variant="outline" className="border-2 border-blue-100 text-blue-700 hover:bg-white hover:text-blue-700 text-lg px-8 py-4 h-auto font-semibold hover:shadow-sm transition-all duration-300 transform hover:scale-105">
+                <ArrowRight className="w-5 h-5 mr-2" />
+                Sell all games
+              </Button>
+            </Link>
+        </div>
+      </section>
+
+       {/* Features Section */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Why Choose Seatwell?</h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              The trusted platform connecting Swiss sports fans with secure ticket resale
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="text-center p-8 hover:shadow-lg transition-shadow duration-300 border-blue-100">
+              <CardHeader>
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Shield className="w-8 h-8 text-blue-600" />
+                </div>
+                <CardTitle className="text-xl text-gray-900">Secure & Verified</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Only verified season ticket holders can sell. All transactions are protected and guaranteed.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="text-center p-8 hover:shadow-lg transition-shadow duration-300 border-blue-100">
+              <CardHeader>
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-8 h-8 text-blue-600" />
+                </div>
+                <CardTitle className="text-xl text-gray-900">Club Connected</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Integrated with official club systems. Your membership is verified automatically.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="text-center p-8 hover:shadow-lg transition-shadow duration-300 border-blue-100">
+              <CardHeader>
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Calendar className="w-8 h-8 text-blue-600" />
+                </div>
+                <CardTitle className="text-xl text-gray-900">Easy Management</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  List tickets in seconds. Get paid instantly when they sell. No hassle, no waiting.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
